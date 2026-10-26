@@ -266,6 +266,19 @@
 
 <footer>Built for three guys and a golf trip. Changes save instantly and everyone sees them.</footer>
 
+<!-- Password gate -->
+<div class="modal" id="pwModal" hidden>
+  <div class="sheet">
+    <h2>Password</h2>
+    <p>Chris sent it with the link. You only have to enter it once on this phone or browser.</p>
+    <form id="pwForm">
+      <input name="pw" type="password" autocomplete="current-password" placeholder="Password" required autofocus>
+      <div class="hint" id="pwErr" style="color:var(--red)"></div>
+      <div class="actions"><button type="submit" class="btn">Let me in</button></div>
+    </form>
+  </div>
+</div>
+
 <!-- Who are you -->
 <div class="modal" id="whoModal" hidden>
   <div class="sheet">
@@ -356,17 +369,48 @@ let db = null, synced = false;
 const LS_KEY = `trip-local-${TRIP.id}`;
 let state = { availability: {}, options: {}, votes: {} };
 
+// The password doubles as a segment of the database path (trip2027/<password>/...).
+// The Firebase rules only allow reads and writes when that segment matches, so a wrong
+// password gets "permission denied" from the server, not just a blocked screen.
+const PW_KEY = `trip-pw-${TRIP.id}`;
+function askPassword(err){
+  const m = document.getElementById("pwModal");
+  document.getElementById("pwErr").textContent = err || "";
+  m.hidden = false;
+  setTimeout(() => m.querySelector("input").focus(), 50);
+}
+document.getElementById("pwForm").onsubmit = e => {
+  e.preventDefault();
+  const pw = new FormData(e.target).get("pw").trim();
+  if (/[.#$\[\]\/]/.test(pw)) { askPassword("Password can't contain . # $ [ ] or /"); return; }
+  localStorage.setItem(PW_KEY, pw);
+  e.target.reset();
+  document.getElementById("pwModal").hidden = true;
+  connect(pw);
+};
+function connect(pw){
+  if (db) db.off();
+  db = firebase.database().ref(`${TRIP.id}/${pw}`);
+  db.on("value", snap => {
+    const v = snap.val() || {};
+    state = { availability: v.availability || {}, options: v.options || {}, votes: v.votes || {} };
+    synced = true; render();
+    showBanner("", true);
+    if (!me) setTimeout(openWho, 300);
+  }, err => {
+    console.error(err);
+    db.off(); db = null;
+    localStorage.removeItem(PW_KEY);
+    if (String(err && err.code).toLowerCase().includes("permission")) askPassword("That's not it. Try again.");
+    else showBanner("Could not reach the database. Check firebase-config.js and your database rules.", false);
+  });
+}
 function startStorage(){
   if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.databaseURL) {
     try {
       firebase.initializeApp(window.FIREBASE_CONFIG);
-      db = firebase.database().ref(TRIP.id);
-      db.on("value", snap => {
-        const v = snap.val() || {};
-        state = { availability: v.availability || {}, options: v.options || {}, votes: v.votes || {} };
-        synced = true; render();
-      }, err => { console.error(err); showBanner("Could not reach the database. Check firebase-config.js and your database rules.", false); });
-      showBanner("", true);
+      const pw = localStorage.getItem(PW_KEY);
+      if (pw) connect(pw); else askPassword();
       return;
     } catch (e) { console.error(e); }
   }
@@ -374,6 +418,7 @@ function startStorage(){
   try { state = Object.assign(state, JSON.parse(localStorage.getItem(LS_KEY) || "{}")); } catch(e){}
   showBanner("Local preview: nothing is shared yet. Paste your Firebase config into firebase-config.js to turn on live sync.", false);
   render();
+  if (!me) setTimeout(openWho, 400);
 }
 function write(path, value){
   if (db) { db.child(path).set(value); return; }
@@ -541,14 +586,13 @@ document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
   location.hash = t.dataset.tab;
 });
 if (location.hash === "#ideas") document.querySelector('[data-tab="ideas"]').click();
-document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m && m.id !== "whoModal") m.hidden = true; }));
+document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m && m.id !== "whoModal" && m.id !== "pwModal") m.hidden = true; }));
 let toastT; function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 2200); }
 function render(){ renderDates(); renderIdeas(); }
 
 document.getElementById("title").textContent = TRIP.title; document.title = TRIP.title;
 renderMe();
 startStorage();
-if (!me) setTimeout(openWho, 400);
 </script>
 </body>
 </html>

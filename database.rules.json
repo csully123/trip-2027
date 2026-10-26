@@ -3,25 +3,27 @@
     ".read": false,
     ".write": false,
     "trip2027": {
-      ".read": true,
-      ".write": true,
-      "availability": {
-        "$person": {
-          "$weekend": {
-            ".validate": "newData.isString() && (newData.val() == 'free' || newData.val() == 'maybe')"
-          }
-        }
-      },
-      "votes": {
-        "$option": {
+      "$password": {
+        ".read": "$password == 'CHANGE-ME'",
+        ".write": "$password == 'CHANGE-ME'",
+        "availability": {
           "$person": {
-            ".validate": "newData.isString() && (newData.val() == 'in' || newData.val() == 'fine' || newData.val() == 'pass')"
+            "$weekend": {
+              ".validate": "newData.isString() && (newData.val() == 'free' || newData.val() == 'maybe')"
+            }
           }
-        }
-      },
-      "options": {
-        "$option": {
-          ".validate": "newData.hasChildren(['title']) && newData.child('title').isString() && newData.child('title').val().length <= 80"
+        },
+        "votes": {
+          "$option": {
+            "$person": {
+              ".validate": "newData.isString() && (newData.val() == 'in' || newData.val() == 'fine' || newData.val() == 'pass')"
+            }
+          }
+        },
+        "options": {
+          "$option": {
+            ".validate": "newData.hasChildren(['title']) && newData.child('title').isString() && newData.child('title').val().length <= 80"
+          }
         }
       }
     }

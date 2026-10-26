@@ -17,7 +17,7 @@ No build step. One `index.html`, a Firebase Realtime Database for the shared sta
 
 1. Go to https://console.firebase.google.com and **Add project** (name it anything, e.g. `trip-2027`). Google Analytics can be off.
 2. In the left nav: **Build > Realtime Database > Create Database**. Pick the US location, start in **locked mode**.
-3. Open the **Rules** tab, replace everything with the contents of `database.rules.json`, and **Publish**.
+3. Open the **Rules** tab, replace everything with the contents of `database.rules.json`, change both `CHANGE-ME` values to the password you want (letters, numbers and hyphens only; no spaces or `. # $ [ ] /`), and **Publish**. The password lives only in these rules, never in the repo. The site asks for it once per device and then uses it as part of the database path, so a wrong password is rejected by Firebase itself.
 4. Project settings (gear icon) > **Your apps** > click the web icon `</>` > register the app (no hosting needed) > copy the `firebaseConfig` object.
 5. Paste it into `firebase-config.js` as `window.FIREBASE_CONFIG = { ... };`. Make sure it includes `databaseURL` (if it doesn't, copy the URL shown at the top of the Realtime Database page and add it as `databaseURL`).
 
@@ -42,3 +42,5 @@ Everything configurable is at the top of the `<script>` in `index.html`:
 ## Reset
 
 To wipe everything and start over, delete the `trip2027` node in the Firebase console (Realtime Database > Data).
+
+To change the password, edit it in the Rules tab and publish. Everyone will be asked for the new one next time they open the site.
