@@ -1,15 +1,10 @@
-// Paste your Firebase web app config here (Firebase console > Project settings > Your apps > SDK setup and configuration > Config).
-// Until this is filled in, the site runs in "local preview" mode and only saves to the browser you are using.
-//
-// Example:
-// window.FIREBASE_CONFIG = {
-//   apiKey: "AIza...",
-//   authDomain: "trip-2027.firebaseapp.com",
-//   databaseURL: "https://trip-2027-default-rtdb.firebaseio.com",
-//   projectId: "trip-2027",
-//   storageBucket: "trip-2027.appspot.com",
-//   messagingSenderId: "1234567890",
-//   appId: "1:1234567890:web:abcdef"
-// };
-
-window.FIREBASE_CONFIG = null;
+// Firebase web app config. This is not a secret: the database rules (set in the Firebase console) are what protect the data.
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDl_xqXh1oZgjy2Qkt1_Cdvo_neopLCsjQ",
+  authDomain: "trip-2027-c9c34.firebaseapp.com",
+  databaseURL: "https://trip-2027-c9c34-default-rtdb.firebaseio.com",
+  projectId: "trip-2027-c9c34",
+  storageBucket: "trip-2027-c9c34.firebasestorage.app",
+  messagingSenderId: "952524212003",
+  appId: "1:952524212003:web:977d8b50bc41b6d2c9ee96"
+};
