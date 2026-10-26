@@ -343,7 +343,8 @@ function buildWindows(){
   const out = [];
   while (s <= end) {
     const e = addDays(s, TRIP.nights);
-    out.push({ key: iso(s), start: s, end: e, label: `${fmt(s)} to ${fmt(e)}`, month: s.getUTCMonth(), year: s.getUTCFullYear() });
+    const mid = addDays(s, 2); // group each window under the month holding most of its days
+    out.push({ key: iso(s), start: s, end: e, label: `${fmt(s)} to ${fmt(e)}`, month: mid.getUTCMonth(), year: mid.getUTCFullYear() });
     s = addDays(s, 7);
   }
   return out;
@@ -430,7 +431,7 @@ function renderDates(){
     if (w.month !== lastMonth) {
       if (lastMonth !== -1) html += `</div>`;
       const count = WINDOWS.filter(x => x.month === w.month).length;
-      html += `<div class="month"><h3>${MONTHS[w.month]} ${w.year}</h3><small>${count} weekends</small></div><div class="grid">`;
+      html += `<div class="month"><h3>${MONTHS[w.month]} ${w.year}</h3><small>${count} weekend${count===1?"":"s"}</small></div><div class="grid">`;
       lastMonth = w.month;
     }
     const st = windowStats(w);
