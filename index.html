@@ -103,6 +103,8 @@
   .wkgroup.open .wkbody { display: block; }
   .wkbody .evlist { margin-top: 14px; }
   .wkbody .ev { box-shadow: none; }
+  .collapse { display: block; width: 100%; margin-top: 14px; padding: 11px 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--green); font-weight: 700; font-size: 14px; }
+  .collapse:hover { background: var(--bg-2); }
   .who-strip { margin-top: 10px; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1.5px solid var(--line); background: var(--bg); }
   .who-strip.all { background: var(--green); border-color: var(--green); color: #fff; }
   .who-strip.two { background: var(--gold-soft); border-color: #e7d79a; color: #5a4a10; }
@@ -640,11 +642,18 @@ function renderEvents(){
         <div class="wkrow"><h3>${w.label}</h3><div class="meta"><span>${evs.length} event${evs.length===1?"":"s"}${likedN ? ` · ${likedN} liked` : ""}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}<span class="chev" aria-hidden="true">▾</span></div></div>
         ${who}
       </button>
-      <div class="wkbody">${evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`}</div>
+      <div class="wkbody">${evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`}
+        <button class="collapse" data-collapse="${w.key}">▴ Collapse ${w.label}</button>
+      </div>
     </div>`;
   }
   root.innerHTML = html || `<div class="empty-ev">Nothing matches. Loosen the filters.</div>`;
   root.querySelectorAll(".wkhead").forEach(b => b.onclick = () => toggleWeek(b.dataset.week));
+  root.querySelectorAll(".collapse").forEach(b => b.onclick = () => {
+    toggleWeek(b.dataset.collapse, false);
+    const el = document.getElementById(`wk-${b.dataset.collapse}`);
+    if (el) el.scrollIntoView({ block: "start" });
+  });
   root.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => { const id = b.dataset.toggle; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
   root.querySelectorAll(".ev").forEach(c => c.onclick = e => { if (e.target.closest("button")) return; const id = c.dataset.id; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
   root.querySelectorAll("[data-like]").forEach(b => b.onclick = () => {
