@@ -91,8 +91,25 @@
   .howto ul { margin: 8px 0 0; padding-left: 18px; }
   .howto li { margin: 3px 0; }
   .wkgroup { position: relative; margin-top: 18px; scroll-margin-top: 8px; }
-  .wkhead { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 14px 0 8px; border-bottom: 1.5px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .wkhead { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 12px 0 10px; border-bottom: 1.5px solid var(--line); }
+  .wkhead .wkrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .wkhead h3 { font-size: 21px; color: var(--green); }
+  .wkhead h3 .mini { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 6px; }
+  .wkhead h3 .mini .av.sm { width: 24px; height: 24px; font-size: 13px; }
+  .wkhead h3 .mini .av.sm.maybe::after { width: 12px; height: 12px; font-size: 8px; line-height: 12px; right: -4px; top: -4px; }
+  .wkhead.all h3 .mini { background: var(--green); border-radius: 999px; padding: 2px 5px; }
+  .who-strip { margin-top: 10px; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1.5px solid var(--line); background: var(--card); }
+  .who-strip.all { background: var(--green); border-color: var(--green); color: #fff; }
+  .who-strip.two { background: var(--gold-soft); border-color: #e7d79a; color: #5a4a10; }
+  .who-strip.some { background: var(--card); }
+  .who-strip.none { background: transparent; border-style: dashed; color: var(--muted); }
+  .who-avs { display: flex; gap: 10px; }
+  .wa { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .wa small { font-size: 10.5px; font-weight: 700; letter-spacing: .02em; }
+  .wa.no small, .wa.no .av { opacity: .35; }
+  .who-strip.all .wa small { color: #fff; }
+  .who-strip.all .av { border-color: #fff; }
+  .who-txt { font-weight: 700; font-size: 14px; }
   .wkhead .meta { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .wkhead .pill { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--bg-2); color: var(--ink-2); }
   .wkhead .pill.all { background: var(--green); color: #fff; }
@@ -584,8 +601,19 @@ function renderEvents(){
     evs.sort((a,b) => likers(b).length - likers(a).length || a.start.localeCompare(b.start));
     if (filt.liked && !evs.length) continue;
     shown += evs.length;
-    const pill = st.all ? `<span class="pill all">Everyone's free</span>` : st.free.length ? `<span class="pill ${st.two ? "two" : ""}">${st.free.map(p=>p.name).join(", ")} free${st.maybe.length ? `, ${st.maybe.map(p=>p.name).join(", ")} maybe` : ""}</span>` : st.maybe.length ? `<span class="pill">${st.maybe.map(p=>p.name).join(", ")} maybe</span>` : `<span class="pill">No one marked yet</span>`;
-    html += `<div class="wkgroup" id="wk-${w.key}"><div class="wkhead"><h3>${w.label}</h3><div class="meta">${pill}<span>${evs.length} event${evs.length===1?"":"s"}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}</div></div>`;
+    const notYet = PEOPLE.filter(p => !st.free.includes(p) && !st.maybe.includes(p));
+    const whoCls = st.all ? "all" : (st.two || st.allish) ? "two" : st.free.length || st.maybe.length ? "some" : "none";
+    const names = arr => arr.map(p=>p.name).join(", ").replace(/, ([^,]*)$/, " and $1");
+    const whoTxt = st.all ? "Everyone's free this week"
+      : whoCls === "none" ? "No one has marked this week yet"
+      : [st.free.length ? `${names(st.free)} free` : "", st.maybe.length ? `${names(st.maybe)} maybe` : "", notYet.length ? `${names(notYet)} not marked` : ""].filter(Boolean).join(" · ");
+    const whoAvs = PEOPLE.map(p => {
+      const a = avail(p.id, w.key);
+      return `<span class="wa ${a || "no"}">${a ? avatarHTML(p, a === "maybe" ? "maybe" : "") : `<span class="av empty"><span>${p.emoji}</span></span>`}<small>${p.name}</small></span>`;
+    }).join("");
+    const who = `<div class="who-strip ${whoCls}"><div class="who-avs">${whoAvs}</div><div class="who-txt">${whoTxt}</div></div>`;
+    const miniAvs = `<span class="mini ${whoCls}">${PEOPLE.map(p => { const a = avail(p.id, w.key); return a ? avatarHTML(p, "sm" + (a === "maybe" ? " maybe" : "")) : `<span class="av sm empty"><span>${p.emoji}</span></span>`; }).join("")}</span>`;
+    html += `<div class="wkgroup" id="wk-${w.key}"><div class="wkhead ${whoCls}"><div class="wkrow"><h3>${w.label} ${miniAvs}</h3><div class="meta"><span>${evs.length} event${evs.length===1?"":"s"}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}</div></div></div>${who}`;
     html += evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`;
     html += `</div>`;
   }
