@@ -90,15 +90,20 @@
   .howto b { color: var(--ink); }
   .howto ul { margin: 8px 0 0; padding-left: 18px; }
   .howto li { margin: 3px 0; }
-  .wkgroup { position: relative; margin-top: 18px; scroll-margin-top: 8px; }
-  .wkhead { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 12px 0 10px; border-bottom: 1.5px solid var(--line); }
+  .wkgroup { margin-top: 12px; scroll-margin-top: 8px; background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .wkgroup.all { border-color: var(--green-2); }
+  .wkgroup.two { border-color: var(--gold); }
+  .wkhead { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 14px 16px; color: inherit; }
+  .wkhead:hover { background: rgba(27,42,34,.03); }
   .wkhead .wkrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .wkhead h3 { font-size: 21px; color: var(--green); }
-  .wkhead h3 .mini { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 6px; }
-  .wkhead h3 .mini .av.sm { width: 24px; height: 24px; font-size: 13px; }
-  .wkhead h3 .mini .av.sm.maybe::after { width: 12px; height: 12px; font-size: 8px; line-height: 12px; right: -4px; top: -4px; }
-  .wkhead.all h3 .mini { background: var(--green); border-radius: 999px; padding: 2px 5px; }
-  .who-strip { margin-top: 10px; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1.5px solid var(--line); background: var(--card); }
+  .wkhead .chev { display: inline-block; font-size: 18px; color: var(--muted); transition: transform .15s ease; margin-left: 4px; }
+  .wkgroup.open .wkhead .chev { transform: rotate(180deg); }
+  .wkbody { display: none; padding: 0 16px 16px; border-top: 1.5px dashed var(--line); }
+  .wkgroup.open .wkbody { display: block; }
+  .wkbody .evlist { margin-top: 14px; }
+  .wkbody .ev { box-shadow: none; }
+  .who-strip { margin-top: 10px; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1.5px solid var(--line); background: var(--bg); }
   .who-strip.all { background: var(--green); border-color: var(--green); color: #fff; }
   .who-strip.two { background: var(--gold-soft); border-color: #e7d79a; color: #5a4a10; }
   .who-strip.some { background: var(--card); }
@@ -531,7 +536,7 @@ function renderDates(){
     b.onclick = e => { if (e.target.closest(".evc")) return; cycle(b.dataset.key); };
     b.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycle(b.dataset.key); } };
   });
-  root.querySelectorAll(".evc").forEach(a => a.onclick = e => { e.stopPropagation(); showTab("events"); setTimeout(() => { const el = document.getElementById(`wk-${a.dataset.ev}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 50); });
+  root.querySelectorAll(".evc").forEach(a => a.onclick = e => { e.stopPropagation(); showTab("events"); toggleWeek(a.dataset.ev, true); setTimeout(() => { const el = document.getElementById(`wk-${a.dataset.ev}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 50); });
 
   const all = WINDOWS.filter(w => windowStats(w).all);
   const near = WINDOWS.filter(w => { const s = windowStats(w); return !s.all && (s.two || s.allish); });
@@ -556,6 +561,21 @@ function renderDates(){
 // ---------- Events ----------
 const filt = { region: "all", cat: "all", weeks: "all", liked: false };
 const openCards = new Set();
+// Which weeks are expanded in What's on. Remembered per browser; first visit opens the weeks everyone is free.
+let openWeeks = new Set();
+let weeksInit = false;
+try { const s = localStorage.getItem("trip-open-weeks"); if (s) { openWeeks = new Set(JSON.parse(s)); weeksInit = true; } } catch(e){}
+function initOpenWeeks(){
+  if (weeksInit) return;
+  weeksInit = true;
+  WINDOWS.forEach(w => { if (windowStats(w).all) openWeeks.add(w.key); });
+}
+function saveOpenWeeks(){ try { localStorage.setItem("trip-open-weeks", JSON.stringify([...openWeeks])); } catch(e){} }
+function toggleWeek(key, force){
+  const want = force === undefined ? !openWeeks.has(key) : force;
+  want ? openWeeks.add(key) : openWeeks.delete(key);
+  saveOpenWeeks(); renderEvents();
+}
 const CAT = { sport:"Sport", music:"Concert", drink:"Drinking", festival:"Festival", culture:"Culture" };
 const REG = { EU:"Europe", AS:"Asia", OC:"Oceania" };
 const STATUS = { confirmed:"Confirmed 2027", annual:"Every year", tbc:"2027 TBC" };
@@ -594,6 +614,7 @@ function renderEvents(){
   const root = document.getElementById("eventsRoot");
   let html = "";
   let shown = 0;
+  initOpenWeeks();
   for (const w of WINDOWS) {
     const st = windowStats(w);
     if (filt.weeks === "free" && !st.all) continue;
@@ -612,12 +633,18 @@ function renderEvents(){
       return `<span class="wa ${a || "no"}">${a ? avatarHTML(p, a === "maybe" ? "maybe" : "") : `<span class="av empty"><span>${p.emoji}</span></span>`}<small>${p.name}</small></span>`;
     }).join("");
     const who = `<div class="who-strip ${whoCls}"><div class="who-avs">${whoAvs}</div><div class="who-txt">${whoTxt}</div></div>`;
-    const miniAvs = `<span class="mini ${whoCls}">${PEOPLE.map(p => { const a = avail(p.id, w.key); return a ? avatarHTML(p, "sm" + (a === "maybe" ? " maybe" : "")) : `<span class="av sm empty"><span>${p.emoji}</span></span>`; }).join("")}</span>`;
-    html += `<div class="wkgroup" id="wk-${w.key}"><div class="wkhead ${whoCls}"><div class="wkrow"><h3>${w.label} ${miniAvs}</h3><div class="meta"><span>${evs.length} event${evs.length===1?"":"s"}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}</div></div></div>${who}`;
-    html += evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`;
-    html += `</div>`;
+    const isOpen = openWeeks.has(w.key);
+    const likedN = evs.filter(ev => likers(ev).length).length;
+    html += `<div class="wkgroup ${whoCls} ${isOpen ? "open" : ""}" id="wk-${w.key}">
+      <button class="wkhead" data-week="${w.key}" aria-expanded="${isOpen}">
+        <div class="wkrow"><h3>${w.label}</h3><div class="meta"><span>${evs.length} event${evs.length===1?"":"s"}${likedN ? ` · ${likedN} liked` : ""}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}<span class="chev" aria-hidden="true">▾</span></div></div>
+        ${who}
+      </button>
+      <div class="wkbody">${evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`}</div>
+    </div>`;
   }
   root.innerHTML = html || `<div class="empty-ev">Nothing matches. Loosen the filters.</div>`;
+  root.querySelectorAll(".wkhead").forEach(b => b.onclick = () => toggleWeek(b.dataset.week));
   root.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => { const id = b.dataset.toggle; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
   root.querySelectorAll(".ev").forEach(c => c.onclick = e => { if (e.target.closest("button")) return; const id = c.dataset.id; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
   root.querySelectorAll("[data-like]").forEach(b => b.onclick = () => {
