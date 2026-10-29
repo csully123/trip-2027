@@ -4,108 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Trip 2027</title>
-<meta name="description" content="Pick the weekends you're free, then vote on the trip.">
+<meta name="description" content="Pick the weeks you're free, see what's on, like the events you'd go for, then vote on the trip.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛳</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f0e6;
-    --bg-2: #ece5d6;
-    --card: #fffdf8;
-    --ink: #1b2a22;
-    --ink-2: #4a5a50;
-    --muted: #8a9589;
-    --line: #dcd4c3;
-    --green: #0f4d35;
-    --green-2: #176a49;
-    --green-soft: #dcefe3;
-    --gold: #c9a227;
-    --gold-soft: #f6ecc8;
-    --red: #b4462f;
+    --bg: #f5f0e6; --bg-2: #ece5d6; --card: #fffdf8;
+    --ink: #1b2a22; --ink-2: #4a5a50; --muted: #8a9589; --line: #dcd4c3;
+    --green: #0f4d35; --green-2: #176a49; --green-soft: #dcefe3;
+    --gold: #c9a227; --gold-soft: #f6ecc8; --red: #b4462f; --blue-soft: #dfe7f6;
     --shadow: 0 1px 2px rgba(27,42,34,.06), 0 6px 18px rgba(27,42,34,.07);
     --radius: 14px;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body {
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.45;
-  }
+  body { font-family: "Inter", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; line-height: 1.45; }
   h1, h2, h3, .serif { font-family: "Fraunces", Georgia, serif; font-weight: 700; letter-spacing: -.01em; margin: 0; }
   button { font: inherit; cursor: pointer; }
   a { color: var(--green-2); }
 
-  /* Header */
-  header {
-    background: var(--green);
-    color: #f7f3e8;
-    padding: 22px 18px 18px;
-  }
-  .wrap { max-width: 980px; margin: 0 auto; }
+  header { background: var(--green); color: #f7f3e8; padding: 22px 18px 0; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
   header .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
   header h1 { font-size: clamp(26px, 5vw, 38px); line-height: 1.05; }
-  header .sub { color: #c9dccf; margin-top: 6px; font-size: 14px; max-width: 560px; }
-  .me-btn {
-    border: 1px solid rgba(255,255,255,.25);
-    background: rgba(255,255,255,.08);
-    color: #fff;
-    border-radius: 999px;
-    padding: 8px 12px 8px 8px;
-    display: flex; align-items: center; gap: 8px;
-    font-weight: 600; font-size: 14px; white-space: nowrap;
-  }
+  header .sub { color: #c9dccf; margin-top: 6px; font-size: 14px; max-width: 600px; }
+  .me-btn { border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff; border-radius: 999px; padding: 8px 12px 8px 8px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; white-space: nowrap; }
   .me-btn .av { width: 28px; height: 28px; font-size: 16px; }
-  .tabs { display: flex; gap: 6px; margin-top: 18px; }
-  .tab {
-    border: 0; background: transparent; color: #c9dccf;
-    padding: 10px 14px; border-radius: 10px 10px 0 0; font-weight: 600; font-size: 15px;
-  }
+  .tabs { display: flex; gap: 4px; margin-top: 18px; overflow-x: auto; }
+  .tab { border: 0; background: transparent; color: #c9dccf; padding: 10px 14px; border-radius: 10px 10px 0 0; font-weight: 600; font-size: 15px; white-space: nowrap; }
   .tab[aria-selected="true"] { background: var(--bg); color: var(--green); }
   main { padding: 20px 18px 60px; }
   section[hidden] { display: none; }
 
-  /* Avatars */
-  .av {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px; border-radius: 50%;
-    font-size: 19px; line-height: 1;
-    background: var(--c, var(--green-soft));
-    border: 2px solid #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,.15);
-    flex: none;
-  }
+  .av { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; font-size: 19px; line-height: 1; background: var(--c, var(--green-soft)); border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.15); flex: none; }
   .av.maybe { opacity: .45; filter: grayscale(.4); position: relative; }
-  .av.maybe::after {
-    content: "?"; position: absolute; right: -5px; top: -5px;
-    width: 15px; height: 15px; border-radius: 50%; background: var(--ink-2); color: #fff;
-    font: 700 10px/15px Inter, sans-serif; text-align: center; opacity: 1;
-  }
+  .av.maybe::after { content: "?"; position: absolute; right: -5px; top: -5px; width: 15px; height: 15px; border-radius: 50%; background: var(--ink-2); color: #fff; font: 700 10px/15px Inter, sans-serif; text-align: center; opacity: 1; }
   .av.empty { background: transparent; border: 2px dashed var(--line); box-shadow: none; opacity: .7; }
   .av.empty span { opacity: .25; }
+  .av.sm { width: 22px; height: 22px; font-size: 12px; border-width: 1.5px; }
 
-  /* Banner */
-  .banner {
-    background: var(--gold-soft); border: 1px solid #e7d79a; color: #5a4a10;
-    border-radius: 10px; padding: 10px 14px; font-size: 13.5px; margin-bottom: 16px;
-  }
+  .banner { background: var(--gold-soft); border: 1px solid #e7d79a; color: #5a4a10; border-radius: 10px; padding: 10px 14px; font-size: 13.5px; margin-bottom: 16px; }
   .banner.sync { background: var(--green-soft); border-color: #bcd9c7; color: #0f4d35; }
 
-  /* Summary */
-  .summary {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 18px;
-  }
+  .summary { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 18px; }
   .summary h2 { font-size: 20px; margin-bottom: 4px; }
   .summary p { margin: 0 0 10px; color: var(--ink-2); font-size: 14px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip {
-    background: var(--green); color: #fff; border-radius: 999px; padding: 6px 12px;
-    font-size: 13px; font-weight: 600; border: 0;
-  }
+  .chip { background: var(--green); color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; border: 0; }
   .chip.two { background: var(--gold-soft); color: #5a4a10; border: 1px solid #e7d79a; }
   .chip.none { background: transparent; color: var(--muted); border: 1px dashed var(--line); font-weight: 500; }
   .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 14px; font-size: 13px; color: var(--ink-2); align-items: center; }
@@ -113,22 +59,16 @@
   .legend .k { display: flex; align-items: center; gap: 6px; }
   .legend .sw { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
 
-  /* Month groups and weekend cards */
   .month { margin: 22px 0 10px; display: flex; align-items: baseline; gap: 10px; }
   .month h3 { font-size: 22px; color: var(--green); }
   .month small { color: var(--muted); font-size: 13px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-  .wk {
-    background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius);
-    padding: 14px 14px 12px; text-align: left; box-shadow: var(--shadow);
-    display: flex; flex-direction: column; gap: 10px; min-height: 118px;
-    transition: transform .08s ease, border-color .15s ease, background .15s ease;
-    -webkit-tap-highlight-color: transparent; position: relative;
-  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .wk { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 14px 14px 12px; text-align: left; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px; min-height: 130px; transition: transform .08s ease, border-color .15s ease, background .15s ease; -webkit-tap-highlight-color: transparent; position: relative; }
   .wk:active { transform: scale(.985); }
   .wk .dates { font-family: "Fraunces", serif; font-weight: 700; font-size: 18px; line-height: 1.1; }
   .wk .days { color: var(--muted); font-size: 12px; margin-top: 2px; }
   .wk .note { font-size: 12px; color: #8a6a0e; background: var(--gold-soft); border-radius: 6px; padding: 3px 7px; display: inline-block; width: fit-content; }
+  .wk .evc { font-size: 12px; color: var(--green-2); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; width: fit-content; }
   .wk .row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
   .wk .avs { display: flex; gap: 6px; }
   .wk .state { font-size: 12px; font-weight: 600; color: var(--muted); }
@@ -137,38 +77,67 @@
   .wk.mine-maybe { border-color: var(--gold); }
   .wk.mine-maybe .state { color: #8a6a0e; }
   .wk.all { background: var(--green-soft); border-color: var(--green-2); }
-  .wk.all::before {
-    content: "Everyone's free"; position: absolute; top: -9px; right: 12px;
-    background: var(--green); color: #fff; font-size: 11px; font-weight: 700;
-    padding: 2px 8px; border-radius: 999px; letter-spacing: .02em;
-  }
+  .wk.all::before { content: "Everyone's free"; position: absolute; top: -9px; right: 12px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; letter-spacing: .02em; }
   .wk.two-of-three { background: #fbf7ec; }
+
+  /* Events tab */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; align-items: center; }
+  .filters .lbl { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin-right: 2px; }
+  .f { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .f[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .f.sep { margin-left: 8px; }
+  .howto { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; box-shadow: var(--shadow); margin-bottom: 16px; font-size: 14px; color: var(--ink-2); }
+  .howto b { color: var(--ink); }
+  .howto ul { margin: 8px 0 0; padding-left: 18px; }
+  .howto li { margin: 3px 0; }
+  .wkgroup { position: relative; margin-top: 18px; scroll-margin-top: 8px; }
+  .wkhead { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 14px 0 8px; border-bottom: 1.5px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .wkhead h3 { font-size: 21px; color: var(--green); }
+  .wkhead .meta { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .wkhead .pill { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--bg-2); color: var(--ink-2); }
+  .wkhead .pill.all { background: var(--green); color: #fff; }
+  .wkhead .pill.two { background: var(--gold-soft); color: #5a4a10; }
+  .wkhead .avs { display: flex; gap: 4px; }
+  .evlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 12px; }
+  .ev { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .ev.liked-all { border-color: var(--green-2); background: var(--green-soft); }
+  .ev.liked-mine { border-color: var(--green-2); }
+  .ev .tags { display: flex; gap: 6px; flex-wrap: wrap; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  .ev .tag { padding: 2px 7px; border-radius: 6px; background: var(--bg-2); color: var(--ink-2); }
+  .ev .tag.r-EU { background: #e4e9f7; color: #2d3f7a; } .ev .tag.r-AS { background: #f8e4de; color: #8a2f1a; } .ev .tag.r-OC { background: #e2f2e8; color: #14573b; }
+  .ev .tag.confirmed { background: var(--green); color: #fff; } .ev .tag.annual { background: var(--green-soft); color: var(--green); } .ev .tag.tbc { background: var(--gold-soft); color: #7a5f0a; }
+  .ev h4 { font-family: "Fraunces", serif; font-size: 18px; margin: 0; line-height: 1.15; }
+  .ev .where { font-size: 13px; color: var(--ink-2); }
+  .ev .when { font-size: 13px; font-weight: 600; color: var(--green); }
+  .ev .desc { font-size: 13.5px; color: var(--ink); margin: 0; }
+  .ev .more { display: none; flex-direction: column; gap: 8px; font-size: 13px; }
+  .ev.open .more { display: flex; }
+  .ev .sec b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 2px; }
+  .ev .pm { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ev .pm ul { margin: 0; padding-left: 16px; }
+  .ev .pm li { margin: 2px 0; }
+  .ev .pm .plus b { color: var(--green-2); } .ev .pm .minus b { color: var(--red); }
+  .ev .len { background: var(--gold-soft); color: #5a4a10; border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600; }
+  .ev .foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+  .ev .toggle { background: none; border: 0; color: var(--green-2); font-size: 13px; font-weight: 600; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+  .like { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 700; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+  .like .avs { display: flex; gap: 3px; }
+  .like.on { border-color: var(--green-2); background: var(--green-soft); color: var(--green); }
+  .empty-ev { color: var(--muted); font-size: 14px; padding: 16px 0 4px; }
 
   /* Trip ideas */
   .ideas-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
   .ideas-head p { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
-  .btn {
-    background: var(--green); color: #fff; border: 0; border-radius: 10px;
-    padding: 10px 16px; font-weight: 600; font-size: 14px;
-  }
+  .btn { background: var(--green); color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; font-weight: 600; font-size: 14px; }
   .btn.ghost { background: transparent; color: var(--green); border: 1.5px solid var(--green); }
-  .btn.small { padding: 6px 10px; font-size: 13px; border-radius: 8px; }
-  .idea {
-    background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius);
-    padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 12px;
-  }
-  .idea .t { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+  .idea { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 12px; }
   .idea h3 { font-size: 20px; }
   .idea .meta { color: var(--ink-2); font-size: 13.5px; margin-top: 4px; }
   .idea .meta b { color: var(--green); }
   .idea .details { margin: 10px 0 0; font-size: 14px; white-space: pre-wrap; color: var(--ink); }
   .idea .votes { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
-  .vote {
-    border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px;
-    font-size: 13.5px; font-weight: 600; color: var(--ink-2); display: flex; align-items: center; gap: 6px;
-  }
+  .vote { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
   .vote .avs { display: flex; gap: 3px; }
-  .vote .avs .av { width: 20px; height: 20px; font-size: 11px; border-width: 1.5px; }
   .vote.on-in { border-color: var(--green-2); background: var(--green-soft); color: var(--green); }
   .vote.on-fine { border-color: var(--gold); background: var(--gold-soft); color: #5a4a10; }
   .vote.on-pass { border-color: var(--red); background: #f8e4de; color: var(--red); }
@@ -176,37 +145,22 @@
   .idea .foot button { background: none; border: 0; color: var(--muted); font-size: 12px; text-decoration: underline; padding: 0; }
   .empty-ideas { color: var(--muted); text-align: center; padding: 30px 10px; border: 1.5px dashed var(--line); border-radius: var(--radius); }
 
-  /* Forms and modal */
   .modal { position: fixed; inset: 0; background: rgba(15,30,22,.55); display: flex; align-items: flex-end; justify-content: center; padding: 0; z-index: 50; }
   .modal[hidden] { display: none; }
-  .sheet {
-    background: var(--card); border-radius: 18px 18px 0 0; padding: 22px 20px 30px; width: 100%; max-width: 560px;
-    max-height: 92vh; overflow: auto;
-  }
+  .sheet { background: var(--card); border-radius: 18px 18px 0 0; padding: 22px 20px 30px; width: 100%; max-width: 560px; max-height: 92vh; overflow: auto; }
   @media (min-width: 640px) { .modal { align-items: center; padding: 20px; } .sheet { border-radius: 18px; } }
   .sheet h2 { font-size: 22px; margin-bottom: 4px; }
   .sheet p { color: var(--ink-2); font-size: 14px; margin: 0 0 14px; }
   .who { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .who button {
-    background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 16px 8px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; font-size: 15px;
-  }
+  .who button { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
   .who button .av { width: 46px; height: 46px; font-size: 26px; }
   .who button:hover, .who button:focus-visible { border-color: var(--green-2); }
   label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 5px; color: var(--ink-2); }
-  input, textarea, select {
-    width: 100%; font: inherit; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px;
-    background: #fff; color: var(--ink);
-  }
+  input, textarea, select { width: 100%; font: inherit; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
   textarea { min-height: 90px; resize: vertical; }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
   .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .toast {
-    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
-    background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13.5px;
-    opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 60;
-  }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 13.5px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 60; }
   .toast.show { opacity: 1; }
   footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 18px 30px; }
 </style>
@@ -218,7 +172,7 @@
     <div class="top">
       <div>
         <h1 id="title">Trip 2027</h1>
-        <div class="sub">Tap the weekends you can do (Wed to Sun, April through July). Once all three of us have marked up, we pick a stretch and vote on the plan.</div>
+        <div class="sub">Tap the weeks you can do (Sunday to Sunday, April through July). Then hit <b>What's on</b> to see every event abroad that week and like the ones you'd go for.</div>
       </div>
       <button class="me-btn" id="meBtn" title="Switch who you are">
         <span class="av" id="meAv">?</span><span id="meName">Who are you?</span>
@@ -226,6 +180,7 @@
     </div>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" aria-selected="true" data-tab="dates">Dates</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="events">What's on</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="ideas">Trip ideas</button>
     </div>
   </div>
@@ -237,26 +192,54 @@
   <section id="tab-dates">
     <div class="summary">
       <h2 id="sumTitle">Nobody has marked up yet</h2>
-      <p id="sumText">Pick who you are up top, then tap each weekend you could make.</p>
+      <p id="sumText">Pick who you are up top, then tap each week you could make.</p>
       <div class="chips" id="sumChips"></div>
     </div>
-
     <div class="legend">
       <span class="k"><span class="av" style="--c:#d9efe1">🏌️</span> Free</span>
       <span class="k"><span class="av maybe" style="--c:#d9efe1">🏌️</span> Maybe</span>
       <span class="k"><span class="sw" style="background:var(--green-soft);border:1.5px solid var(--green-2)"></span> All three free</span>
       <span class="k"><span class="sw" style="background:#fbf7ec;border:1.5px solid var(--line)"></span> Two of three</span>
-      <span class="k" style="color:var(--muted)">Tap a weekend: once = free, twice = maybe, three times = clear</span>
+      <span class="k" style="color:var(--muted)">Tap a week: once = free, twice = maybe, three times = clear</span>
     </div>
-
     <div id="months"></div>
+  </section>
+
+  <section id="tab-events" hidden>
+    <div class="howto">
+      <b>How this works.</b> Every event abroad (Europe, Asia, Oceania) between late March and early August is listed under the week it falls in. Tap <b>Like</b> on anything you'd actually get on a plane for; everyone's icons show on each one. Tap a card to open the description, golf nearby, pluses and minuses, and how long the trip would need to be.
+      <ul>
+        <li><b>Confirmed</b> = 2027 dates published. <b>Every year</b> = same calendar date annually. <b>TBC</b> = 2027 not announced yet; date shown follows the 2025/2026 pattern, so verify before booking.</li>
+        <li>Rule of thumb from New York: Europe works in 7 nights. Asia and Oceania really want 10 to 14, so a Sunday-to-Sunday there is tight.</li>
+      </ul>
+    </div>
+    <div class="filters" id="filters">
+      <span class="lbl">Region</span>
+      <button class="f" data-k="region" data-v="all" aria-pressed="true">All</button>
+      <button class="f" data-k="region" data-v="EU">Europe</button>
+      <button class="f" data-k="region" data-v="AS">Asia</button>
+      <button class="f" data-k="region" data-v="OC">Oceania</button>
+      <span class="lbl sep">Type</span>
+      <button class="f" data-k="cat" data-v="all" aria-pressed="true">All</button>
+      <button class="f" data-k="cat" data-v="sport">Sport</button>
+      <button class="f" data-k="cat" data-v="music">Concerts</button>
+      <button class="f" data-k="cat" data-v="drink">Drinking</button>
+      <button class="f" data-k="cat" data-v="festival">Festivals</button>
+      <button class="f" data-k="cat" data-v="culture">Culture</button>
+      <span class="lbl sep">Show</span>
+      <button class="f" data-k="weeks" data-v="all" aria-pressed="true">Every week</button>
+      <button class="f" data-k="weeks" data-v="free">Weeks we're all free</button>
+      <button class="f" data-k="liked" data-v="any">Liked by anyone</button>
+    </div>
+    <div class="summary" id="likeSummary" hidden></div>
+    <div id="eventsRoot"></div>
   </section>
 
   <section id="tab-ideas" hidden>
     <div class="ideas-head">
       <div>
         <h2 class="serif" style="font-size:22px">Trip ideas</h2>
-        <p>Once we know the open weekends, drop options here and everyone votes.</p>
+        <p>Once the likes settle, drop full trip options here and everyone votes.</p>
       </div>
       <button class="btn" id="addIdeaBtn">+ Add an idea</button>
     </div>
@@ -266,7 +249,6 @@
 
 <footer>Built for three guys and a golf trip. Changes save instantly and everyone sees them.</footer>
 
-<!-- Password gate -->
 <div class="modal" id="pwModal" hidden>
   <div class="sheet">
     <h2>Password</h2>
@@ -279,7 +261,6 @@
   </div>
 </div>
 
-<!-- Who are you -->
 <div class="modal" id="whoModal" hidden>
   <div class="sheet">
     <h2>Who are you?</h2>
@@ -288,21 +269,20 @@
   </div>
 </div>
 
-<!-- Add idea -->
 <div class="modal" id="ideaModal" hidden>
   <div class="sheet">
     <h2>Add a trip idea</h2>
     <p>Keep it loose. We can edit and add detail as it firms up.</p>
     <form id="ideaForm">
       <label>Title</label>
-      <input name="title" required placeholder="e.g. Southwest coast golf + pubs" maxlength="80">
-      <label>Weekend</label>
+      <input name="title" required placeholder="e.g. St Andrews for The Open + Fife links" maxlength="80">
+      <label>Week</label>
       <select name="weekend" id="ideaWeekend"></select>
-      <div class="hint">Pick the closest window. Exact dates can shift a day either way.</div>
+      <div class="hint">Pick the closest window. Exact dates can shift.</div>
       <label>Where</label>
-      <input name="where" placeholder="e.g. Ballybunion, Lahinch, Doolin" maxlength="120">
+      <input name="where" placeholder="e.g. Fife, Scotland" maxlength="120">
       <label>Details</label>
-      <textarea name="details" placeholder="Courses, pubs, rough cost, flights, anything worth knowing"></textarea>
+      <textarea name="details" placeholder="Courses, pubs, events, rough cost, flights, anything worth knowing"></textarea>
       <label>Link (optional)</label>
       <input name="link" type="url" placeholder="https://">
       <div class="actions">
@@ -318,30 +298,31 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script>
+<script src="events.js"></script>
 <script>
-// ---------- Config: edit these to change the trip, the people, or the window ----------
+// ---------- Config ----------
 const TRIP = {
-  id: "trip2027",            // database path; change if you ever reuse this site for another trip
+  id: "trip2027",
   title: "Trip 2027",
-  rangeStart: "2027-04-01",  // windows that touch this range are shown
+  rangeStart: "2027-04-01",
   rangeEnd:   "2027-07-31",
-  startDow: 3,               // 3 = Wednesday
-  nights: 4,                 // Wed to Sun
+  startDow: 0,   // 0 = Sunday
+  nights: 7,     // Sunday to Sunday
 };
 const PEOPLE = [
   { id: "chris", name: "Chris", emoji: "🏌️", color: "#d9efe1" },
   { id: "tj",    name: "TJ",    emoji: "🍺", color: "#f6ecc8" },
   { id: "drew",  name: "Drew",  emoji: "☘️", color: "#dfe7f6" },
 ];
-// Heads-up labels on specific windows (keyed by the Wednesday date)
+// Labels on specific weeks (keyed by the Sunday the week starts)
 const NOTES = {
-  "2027-05-26": "Memorial Day Mon 5/31",
-  "2027-06-16": "Father's Day Sun 6/20",
-  "2027-06-30": "July 4th Sun 7/4",
-  "2027-07-14": "The Open, Royal Birkdale 7/15-18",
+  "2027-05-30": "Memorial Day Mon 5/31",
+  "2027-06-13": "Father's Day Sun 6/20",
+  "2027-06-27": "July 4th Sun 7/4",
+  "2027-07-11": "The Open, St Andrews 7/15 to 18",
 };
 
-// ---------- Weekend windows ----------
+// ---------- Windows ----------
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 function iso(d){ return d.toISOString().slice(0,10); }
@@ -350,29 +331,58 @@ function addDays(d,n){ return new Date(d.getTime()+n*864e5); }
 function fmt(d){ return `${MONTHS[d.getUTCMonth()].slice(0,3)} ${d.getUTCDate()}`; }
 function buildWindows(){
   const start = parse(TRIP.rangeStart), end = parse(TRIP.rangeEnd);
-  // first window whose END is on/after rangeStart
   let s = addDays(start, -TRIP.nights);
   while (s.getUTCDay() !== TRIP.startDow) s = addDays(s, 1);
   const out = [];
   while (s <= end) {
     const e = addDays(s, TRIP.nights);
-    const mid = addDays(s, 2); // group each window under the month holding most of its days
+    const mid = addDays(s, 3);
     out.push({ key: iso(s), start: s, end: e, label: `${fmt(s)} to ${fmt(e)}`, month: mid.getUTCMonth(), year: mid.getUTCFullYear() });
     s = addDays(s, 7);
   }
   return out;
 }
 const WINDOWS = buildWindows();
+const WKEYS = new Set(WINDOWS.map(w => w.key));
+const EVENTS = (window.TRIP_EVENTS || []).map(e => ({ ...e, s: parse(e.start), e: parse(e.end) }));
+function eventsFor(w){ return EVENTS.filter(ev => ev.s < w.end && ev.e >= w.start); }
 
-// ---------- Storage: Firebase if configured, otherwise this browser only ----------
-let db = null, synced = false;
+// ---------- Storage ----------
+let db = null;
 const LS_KEY = `trip-local-${TRIP.id}`;
 let state = { availability: {}, options: {}, votes: {} };
-
-// The password doubles as a segment of the database path (trip2027/<password>/...).
-// The Firebase rules only allow reads and writes when that segment matches, so a wrong
-// password gets "permission denied" from the server, not just a blocked screen.
 const PW_KEY = `trip-pw-${TRIP.id}`;
+let migrated = false;
+
+// One-time migration: earlier version keyed availability by the Wednesday a window started.
+// New windows start on the Sunday 3 days earlier. Move any legacy key to key-3days.
+function migrateAvailability(av){
+  const moves = [];
+  for (const pid of Object.keys(av || {})) {
+    for (const key of Object.keys(av[pid] || {})) {
+      if (WKEYS.has(key)) continue;
+      const d = parse(key);
+      if (d.getUTCDay() === 3) {
+        const nk = iso(addDays(d, -3));
+        if (WKEYS.has(nk)) moves.push({ pid, from: key, to: nk, val: av[pid][key] });
+      }
+    }
+  }
+  return moves;
+}
+function applyMigration(){
+  if (migrated) return;
+  const moves = migrateAvailability(state.availability);
+  migrated = true;
+  if (!moves.length) return;
+  for (const m of moves) {
+    const cur = (state.availability[m.pid] || {})[m.to];
+    if (!cur || cur === "maybe" && m.val === "free") write(`availability/${m.pid}/${m.to}`, m.val, true);
+    write(`availability/${m.pid}/${m.from}`, null, true);
+  }
+  if (!db) render();
+}
+
 function askPassword(err){
   const m = document.getElementById("pwModal");
   document.getElementById("pwErr").textContent = err || "";
@@ -394,8 +404,9 @@ function connect(pw){
   db.on("value", snap => {
     const v = snap.val() || {};
     state = { availability: v.availability || {}, options: v.options || {}, votes: v.votes || {} };
-    synced = true; render();
+    render();
     showBanner("", true);
+    applyMigration();
     if (!me) setTimeout(openWho, 300);
   }, err => {
     console.error(err);
@@ -414,20 +425,19 @@ function startStorage(){
       return;
     } catch (e) { console.error(e); }
   }
-  // local fallback
   try { state = Object.assign(state, JSON.parse(localStorage.getItem(LS_KEY) || "{}")); } catch(e){}
   showBanner("Local preview: nothing is shared yet. Paste your Firebase config into firebase-config.js to turn on live sync.", false);
+  applyMigration();
   render();
   if (!me) setTimeout(openWho, 400);
 }
-function write(path, value){
+function write(path, value, quiet){
   if (db) { db.child(path).set(value); return; }
-  // local: set nested path
   const parts = path.split("/"); let o = state;
   for (let i=0;i<parts.length-1;i++){ o[parts[i]] = o[parts[i]] || {}; o = o[parts[i]]; }
   if (value === null) delete o[parts[parts.length-1]]; else o[parts[parts.length-1]] = value;
   localStorage.setItem(LS_KEY, JSON.stringify(state));
-  render();
+  if (!quiet) render();
 }
 function showBanner(msg, ok){
   const b = document.getElementById("banner");
@@ -450,14 +460,14 @@ function openWho(){
   g.querySelectorAll("button").forEach(b => b.onclick = () => {
     me = b.dataset.id; localStorage.setItem("trip-me", me);
     document.getElementById("whoModal").hidden = true; renderMe(); render();
-    toast(`You're ${person(me).name}. Tap the weekends you can do.`);
+    toast(`You're ${person(me).name}. Tap the weeks you can do.`);
   });
   document.getElementById("whoModal").hidden = false;
 }
 document.getElementById("meBtn").onclick = openWho;
 
 // ---------- Availability ----------
-function avail(pid, key){ return (state.availability[pid] || {})[key] || null; } // "free" | "maybe" | null
+function avail(pid, key){ return (state.availability[pid] || {})[key] || null; }
 function cycle(key){
   if (!me) { openWho(); return; }
   const cur = avail(me, key);
@@ -476,7 +486,7 @@ function renderDates(){
     if (w.month !== lastMonth) {
       if (lastMonth !== -1) html += `</div>`;
       const count = WINDOWS.filter(x => x.month === w.month).length;
-      html += `<div class="month"><h3>${MONTHS[w.month]} ${w.year}</h3><small>${count} weekend${count===1?"":"s"}</small></div><div class="grid">`;
+      html += `<div class="month"><h3>${MONTHS[w.month]} ${w.year}</h3><small>${count} week${count===1?"":"s"}</small></div><div class="grid">`;
       lastMonth = w.month;
     }
     const st = windowStats(w);
@@ -488,17 +498,23 @@ function renderDates(){
     }).join("");
     const stateTxt = !me ? "" : mine === "free" ? "You're free" : mine === "maybe" ? "You're a maybe" : "Tap if free";
     const note = NOTES[w.key] ? `<span class="note">${NOTES[w.key]}</span>` : "";
-    html += `<button class="${cls}" data-key="${w.key}">
-      <div><div class="dates">${w.label}</div><div class="days">${DOW[w.start.getUTCDay()]} to ${DOW[w.end.getUTCDay()]} · ${TRIP.nights} nights</div></div>
+    const evs = eventsFor(w);
+    const liked = evs.filter(ev => Object.keys(state.votes[`ev-${ev.id}`] || {}).length).length;
+    html += `<div class="${cls}" data-key="${w.key}" role="button" tabindex="0">
+      <div><div class="dates">${w.label}</div><div class="days">Sun to Sun · ${TRIP.nights} nights</div></div>
       ${note}
+      <span class="evc" data-ev="${w.key}">${evs.length} event${evs.length===1?"":"s"} on${liked ? ` · ${liked} liked` : ""}</span>
       <div class="row"><div class="avs">${avs}</div><span class="state">${stateTxt}</span></div>
-    </button>`;
+    </div>`;
   }
   html += `</div>`;
   root.innerHTML = html;
-  root.querySelectorAll(".wk").forEach(b => b.onclick = () => cycle(b.dataset.key));
+  root.querySelectorAll(".wk").forEach(b => {
+    b.onclick = e => { if (e.target.closest(".evc")) return; cycle(b.dataset.key); };
+    b.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycle(b.dataset.key); } };
+  });
+  root.querySelectorAll(".evc").forEach(a => a.onclick = e => { e.stopPropagation(); showTab("events"); setTimeout(() => { const el = document.getElementById(`wk-${a.dataset.ev}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 50); });
 
-  // summary
   const all = WINDOWS.filter(w => windowStats(w).all);
   const near = WINDOWS.filter(w => { const s = windowStats(w); return !s.all && (s.two || s.allish); });
   const marked = PEOPLE.filter(p => Object.values(state.availability[p.id] || {}).some(Boolean));
@@ -506,10 +522,10 @@ function renderDates(){
   const t = document.getElementById("sumTitle"), x = document.getElementById("sumText"), c = document.getElementById("sumChips");
   if (marked.length === 0) {
     t.textContent = "Nobody has marked up yet";
-    x.textContent = "Pick who you are up top, then tap each weekend you could make.";
+    x.textContent = "Pick who you are up top, then tap each week you could make.";
     c.innerHTML = "";
   } else {
-    t.textContent = all.length ? `${all.length} weekend${all.length===1?"":"s"} where all three are free` : (waiting.length ? "Waiting on " + waiting.map(p=>p.name).join(" and ") : "No weekend works for all three yet");
+    t.textContent = all.length ? `${all.length} week${all.length===1?"":"s"} where all three are free` : (waiting.length ? "Waiting on " + waiting.map(p=>p.name).join(" and ") : "No week works for all three yet");
     x.textContent = waiting.length
       ? `${marked.map(p=>p.name).join(" and ")} ${marked.length===1?"has":"have"} marked up. Still need ${waiting.map(p=>p.name).join(" and ")}.`
       : (all.length ? "Green chips are fully open. Gold chips are two of three, or a maybe in the mix." : "Check the gold chips: someone is a maybe or one person is out.");
@@ -519,28 +535,108 @@ function renderDates(){
   }
 }
 
+// ---------- Events ----------
+const filt = { region: "all", cat: "all", weeks: "all", liked: false };
+const openCards = new Set();
+const CAT = { sport:"Sport", music:"Concert", drink:"Drinking", festival:"Festival", culture:"Culture" };
+const REG = { EU:"Europe", AS:"Asia", OC:"Oceania" };
+const STATUS = { confirmed:"Confirmed 2027", annual:"Every year", tbc:"2027 TBC" };
+function likes(ev){ return state.votes[`ev-${ev.id}`] || {}; }
+function likers(ev){ return PEOPLE.filter(p => likes(ev)[p.id]); }
+function evDates(ev){
+  const same = ev.start === ev.end;
+  return same ? `${fmt(ev.s)}, ${DOW[ev.s.getUTCDay()]}` : `${fmt(ev.s)} to ${fmt(ev.e)}`;
+}
+function evCard(ev, w){
+  const who = likers(ev);
+  const mine = me && likes(ev)[me];
+  const cls = ["ev", who.length === PEOPLE.length ? "liked-all" : mine ? "liked-mine" : "", openCards.has(ev.id) ? "open" : ""].join(" ");
+  const spans = WINDOWS.filter(x => ev.s < x.end && ev.e >= x.start).length;
+  return `<div class="${cls}" data-id="${ev.id}">
+    <div class="tags"><span class="tag r-${ev.region}">${REG[ev.region]}</span><span class="tag">${CAT[ev.cat]}</span><span class="tag ${ev.status}">${STATUS[ev.status]}</span>${spans > 1 ? `<span class="tag">Spans ${spans} weeks</span>` : ""}</div>
+    <h4>${esc(ev.t)}</h4>
+    <div class="where">${esc(ev.loc)}, ${esc(ev.country)}</div>
+    <div class="when">${evDates(ev)}</div>
+    <p class="desc">${esc(ev.desc)}</p>
+    <div class="more">
+      <div class="sec"><b>Golf nearby</b>${esc(ev.golf)}</div>
+      <div class="pm">
+        <div class="plus"><b>Pluses</b><ul>${ev.plus.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div class="minus"><b>Minuses</b><ul>${ev.minus.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      </div>
+      <div class="len">Trip length: ${esc(ev.len)}</div>
+    </div>
+    <div class="foot">
+      <button class="toggle" data-toggle="${ev.id}">${openCards.has(ev.id) ? "Less" : "Golf, pluses, minuses, trip length"}</button>
+      <button class="like ${mine ? "on" : ""}" data-like="${ev.id}">${mine ? "👍 Liked" : "👍 Like"}${who.length ? `<span class="avs">${who.map(p=>avatarHTML(p,"sm")).join("")}</span>` : ""}</button>
+    </div>
+  </div>`;
+}
+function renderEvents(){
+  const root = document.getElementById("eventsRoot");
+  let html = "";
+  let shown = 0;
+  for (const w of WINDOWS) {
+    const st = windowStats(w);
+    if (filt.weeks === "free" && !st.all) continue;
+    let evs = eventsFor(w).filter(ev => (filt.region === "all" || ev.region === filt.region) && (filt.cat === "all" || ev.cat === filt.cat) && (!filt.liked || likers(ev).length));
+    evs.sort((a,b) => likers(b).length - likers(a).length || a.start.localeCompare(b.start));
+    if (filt.liked && !evs.length) continue;
+    shown += evs.length;
+    const pill = st.all ? `<span class="pill all">Everyone's free</span>` : st.free.length ? `<span class="pill ${st.two ? "two" : ""}">${st.free.map(p=>p.name).join(", ")} free${st.maybe.length ? `, ${st.maybe.map(p=>p.name).join(", ")} maybe` : ""}</span>` : st.maybe.length ? `<span class="pill">${st.maybe.map(p=>p.name).join(", ")} maybe</span>` : `<span class="pill">No one marked yet</span>`;
+    html += `<div class="wkgroup" id="wk-${w.key}"><div class="wkhead"><h3>${w.label}</h3><div class="meta">${pill}<span>${evs.length} event${evs.length===1?"":"s"}</span>${NOTES[w.key] ? `<span class="pill">${NOTES[w.key]}</span>` : ""}</div></div>`;
+    html += evs.length ? `<div class="evlist">${evs.map(ev => evCard(ev, w)).join("")}</div>` : `<div class="empty-ev">Nothing matching the filters this week.</div>`;
+    html += `</div>`;
+  }
+  root.innerHTML = html || `<div class="empty-ev">Nothing matches. Loosen the filters.</div>`;
+  root.querySelectorAll("[data-toggle]").forEach(b => b.onclick = () => { const id = b.dataset.toggle; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
+  root.querySelectorAll(".ev").forEach(c => c.onclick = e => { if (e.target.closest("button")) return; const id = c.dataset.id; openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderEvents(); });
+  root.querySelectorAll("[data-like]").forEach(b => b.onclick = () => {
+    if (!me) { openWho(); return; }
+    const ev = EVENTS.find(x => x.id === b.dataset.like);
+    write(`votes/ev-${ev.id}/${me}`, likes(ev)[me] ? null : "in");
+  });
+
+  // like summary
+  const allLiked = EVENTS.filter(ev => likers(ev).length === PEOPLE.length);
+  const twoLiked = EVENTS.filter(ev => likers(ev).length === PEOPLE.length - 1);
+  const anyLiked = EVENTS.filter(ev => likers(ev).length);
+  const s = document.getElementById("likeSummary");
+  if (!anyLiked.length) { s.hidden = true; }
+  else {
+    s.hidden = false;
+    s.innerHTML = `<h2>${allLiked.length ? `${allLiked.length} event${allLiked.length===1?"":"s"} all three of you liked` : `${anyLiked.length} event${anyLiked.length===1?"":"s"} liked so far`}</h2>
+      <p>${allLiked.length ? "Green = all three. Gold = two of three." : "Nothing has three likes yet. Gold = two of three."}</p>
+      <div class="chips">${allLiked.map(ev=>`<span class="chip">${esc(ev.t)} · ${fmt(ev.s)}</span>`).join("")}${twoLiked.map(ev=>`<span class="chip two">${esc(ev.t)} · ${fmt(ev.s)}</span>`).join("")}</div>`;
+  }
+}
+document.querySelectorAll("#filters .f").forEach(b => b.onclick = () => {
+  const k = b.dataset.k, v = b.dataset.v;
+  if (k === "liked") { filt.liked = !filt.liked; b.setAttribute("aria-pressed", filt.liked); }
+  else { filt[k] = v; document.querySelectorAll(`#filters .f[data-k="${k}"]`).forEach(x => x.setAttribute("aria-pressed", x === b)); }
+  renderEvents();
+});
+
 // ---------- Trip ideas ----------
 const VOTES = [["in","👍 I'm in"],["fine","🤷 Fine either way"],["pass","👎 Pass"]];
 function renderIdeas(){
   const root = document.getElementById("ideas");
   const list = Object.entries(state.options).map(([id,o]) => ({id, ...o})).sort((a,b) => (a.weekend||"").localeCompare(b.weekend||"") || (a.createdAt||0)-(b.createdAt||0));
-  if (!list.length) { root.innerHTML = `<div class="empty-ideas">No ideas yet. Once the dates settle, add the first one.</div>`; return; }
+  if (!list.length) { root.innerHTML = `<div class="empty-ideas">No ideas yet. Once the likes settle, add the first one.</div>`; return; }
   root.innerHTML = list.map(o => {
-    const w = WINDOWS.find(x => x.key === o.weekend);
+    const w = WINDOWS.find(x => x.key === o.weekend) || WINDOWS.find(x => { const d = parse(o.weekend || "1970-01-01"); return d >= x.start && d < x.end; });
     const st = w ? windowStats(w) : null;
     const v = state.votes[o.id] || {};
     const myVote = me ? v[me] : null;
     const tally = Object.values(v);
     const votes = VOTES.map(([k,label]) => {
       const who = PEOPLE.filter(p => v[p.id] === k);
-      return `<button class="vote ${myVote===k?"on-"+k:""}" data-id="${o.id}" data-v="${k}">${label}${who.length?`<span class="avs">${who.map(p=>avatarHTML(p)).join("")}</span>`:""}</button>`;
+      return `<button class="vote ${myVote===k?"on-"+k:""}" data-id="${o.id}" data-v="${k}">${label}${who.length?`<span class="avs">${who.map(p=>avatarHTML(p,"sm")).join("")}</span>`:""}</button>`;
     }).join("");
     const by = person(o.createdBy);
     return `<div class="idea">
-      <div class="t"><div>
-        <h3>${esc(o.title)}</h3>
-        <div class="meta">${w ? `<b>${w.label}</b>` : "Dates TBD"}${st ? (st.all ? " · everyone's free" : st.free.length ? ` · ${st.free.map(p=>p.name).join(", ")} free` : "") : ""}${o.where ? ` · ${esc(o.where)}` : ""}</div>
-      </div></div>
+      <h3>${esc(o.title)}</h3>
+      <div class="meta">${w ? `<b>${w.label}</b>` : "Dates TBD"}${st ? (st.all ? " · everyone's free" : st.free.length ? ` · ${st.free.map(p=>p.name).join(", ")} free` : "") : ""}${o.where ? ` · ${esc(o.where)}` : ""}</div>
       ${o.details ? `<p class="details">${esc(o.details)}</p>` : ""}
       ${o.link ? `<p style="margin:8px 0 0;font-size:13.5px"><a href="${esc(o.link)}" target="_blank" rel="noopener">${esc(o.link.replace(/^https?:\/\//,"").slice(0,60))}</a></p>` : ""}
       <div class="votes">${votes}</div>
@@ -556,7 +652,7 @@ function renderIdeas(){
     if (confirm("Remove this idea?")) { write(`options/${b.dataset.del}`, null); write(`votes/${b.dataset.del}`, null); }
   });
 }
-function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
 document.getElementById("addIdeaBtn").onclick = () => {
   if (!me) { openWho(); return; }
@@ -579,16 +675,17 @@ document.getElementById("ideaForm").onsubmit = e => {
 };
 
 // ---------- Tabs, toast, boot ----------
-document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
-  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === t));
-  document.getElementById("tab-dates").hidden = t.dataset.tab !== "dates";
-  document.getElementById("tab-ideas").hidden = t.dataset.tab !== "ideas";
-  location.hash = t.dataset.tab;
-});
-if (location.hash === "#ideas") document.querySelector('[data-tab="ideas"]').click();
+function showTab(name){
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === name));
+  ["dates","events","ideas"].forEach(t => document.getElementById(`tab-${t}`).hidden = t !== name);
+  history.replaceState(null, "", `#${name}`);
+  window.scrollTo({ top: 0 });
+}
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
+if (["#events","#ideas"].includes(location.hash)) showTab(location.hash.slice(1));
 document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m && m.id !== "whoModal" && m.id !== "pwModal") m.hidden = true; }));
 let toastT; function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 2200); }
-function render(){ renderDates(); renderIdeas(); }
+function render(){ renderDates(); renderEvents(); renderIdeas(); }
 
 document.getElementById("title").textContent = TRIP.title; document.title = TRIP.title;
 renderMe();

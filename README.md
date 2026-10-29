@@ -6,8 +6,11 @@ No build step. One `index.html`, a Firebase Realtime Database for the shared sta
 
 ## How it works
 
-- **Dates tab**: every Wed to Sun window in the range is a card. Tap once = free, twice = maybe, three times = clear. Each person's icon shows up on the weekends they marked. Weekends where all three are free turn green and get listed at the top.
-- **Trip ideas tab**: add an option (title, weekend, where, details, link) and everyone votes "I'm in", "Fine either way" or "Pass".
+- **Dates tab**: every Sunday to Sunday week in the range is a card. Tap once = free, twice = maybe, three times = clear. Each person's icon shows up on the weeks they marked. Weeks where all three are free turn green and get listed at the top. Each card shows how many events fall in that week.
+- **What's on tab**: every event abroad (Europe, Asia, Oceania) in the range, listed under the week it falls in, with a description, golf nearby, pluses and minuses, and how long the trip would need to be. Each person can Like an event; events liked by all three go green. Filters by region, type, weeks everyone is free, and liked-by-anyone. The data lives in `events.js`; edit or add entries there.
+- **Trip ideas tab**: add a full trip option (title, week, where, details, link) and everyone votes "I'm in", "Fine either way" or "Pass".
+- Likes are stored under the same `votes` path as trip-idea votes (keyed `ev-<event id>`), so no rules change was needed when they were added.
+- The site switched from Wed to Sun windows to Sun to Sun on Oct 29, 2026. Marks made under the old windows are migrated automatically the first time anyone opens the site (a Wednesday key moves to the Sunday three days earlier).
 - Identity is just a "Who are you?" picker remembered in the browser. No logins; it's three friends.
 - Until `firebase-config.js` is filled in, the site runs in local preview mode (saves only in your own browser).
 
@@ -35,7 +38,8 @@ That config is safe to commit; Firebase web configs are not secrets. The rules a
 Everything configurable is at the top of the `<script>` in `index.html`:
 
 - `TRIP.rangeStart` / `TRIP.rangeEnd`: the date range shown
-- `TRIP.startDow` / `TRIP.nights`: 3 and 4 means Wed to Sun; change to 2 and 5 for Tue to Sun
+- `TRIP.startDow` / `TRIP.nights`: 0 and 7 means Sun to Sun; 3 and 4 would be Wed to Sun (changing this orphans existing marks unless you add a migration)
+- `events.js`: the event list. Fields: id, t (title), loc, country, region (EU/AS/OC), cat (sport/music/drink/festival/culture), start, end, status (confirmed/annual/tbc), desc, golf, plus[], minus[], len
 - `PEOPLE`: names, emoji and colors
 - `NOTES`: little labels on specific weekends (holidays, tournaments)
 
