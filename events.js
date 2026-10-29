@@ -1,7 +1,7 @@
 // Events abroad (Europe, Asia, Oceania) between late March and early August 2027.
 // status: "confirmed" = 2027 dates published; "annual" = same calendar date every year; "tbc" = 2027 not announced yet, date is based on the 2025/2026 pattern.
 // region: EU (Europe), AS (Asia), OC (Oceania). cat: sport, music, drink, festival, culture.
-// len: how long the trip realistically needs from New York.
+// len: how long the trip realistically needs. Chris flies from New York, TJ from Chicago, Drew from San Francisco.
 window.TRIP_EVENTS = [
 
 // ===================== EUROPE =====================
@@ -38,7 +38,7 @@ window.TRIP_EVENTS = [
 { id:"nrl-magic-round", t:"NRL Magic Round", loc:"Brisbane", country:"Australia", region:"OC", cat:"sport", start:"2027-05-07", end:"2027-05-09", status:"tbc",
   desc:"Every NRL game of the round played at Suncorp Stadium over one weekend: eight games, three days, the entire league's fans in one city drinking in Caxton Street.",
   golf:"Brookwater (Greg Norman), Sanctuary Cove and the Gold Coast courses an hour south.",
-  plus:["Pure sports-bar weekend, Brisbane is warm in May","Gold Coast beaches and golf next door"], minus:["Rugby league is an acquired taste","Far for a one-weekend event"], len:"10 to 14 nights (Australia from NYC)" },
+  plus:["Pure sports-bar weekend, Brisbane is warm in May","Gold Coast beaches and golf next door"], minus:["Rugby league is an acquired taste","Far for a one-weekend event"], len:"10 to 14 nights (Australia is a long haul from NYC and Chicago; SFO has nonstops)" },
 
 { id:"giro", t:"Giro d'Italia (final weekends)", loc:"Italy", country:"Italy", region:"EU", cat:"sport", start:"2027-05-08", end:"2027-05-30", status:"tbc",
   desc:"Three weeks of racing through Italy; the mountain stages in the Dolomites in the last week and the Rome finish are the ones to see from a roadside bar.",
